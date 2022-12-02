@@ -109,7 +109,7 @@ class window extends JFrame {
 	edit.addActionListener(new ActionListener() {
 		@Override
 	    public void actionPerformed(ActionEvent e) {
-	        String msg = ClientGui.nickName + ":" + edit.getText();
+	        String msg = ClientGui.user_type + ";" + ClientGui.nickName + ":" + edit.getText();
 	        ClientGui.client.sendMessage(msg);
 	        edit.setText("");
 	    }
@@ -121,7 +121,7 @@ class window extends JFrame {
 	btn_send.addActionListener(new ActionListener() {
 		@Override
 	    public void actionPerformed(ActionEvent e) {
-	        String msg = ClientGui.nickName + ":" + edit.getText();
+	        String msg = ClientGui.user_type + ";" + ClientGui.nickName + ":" + edit.getText();
 	        ClientBackground.sendMessage(msg);
 	        edit.setText("");
 	    }

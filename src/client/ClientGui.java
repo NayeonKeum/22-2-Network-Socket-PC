@@ -24,6 +24,7 @@ public class ClientGui {
 
     static ClientBackground client;
     static String nickName;
+    static String user_type;
     
     static int client_port = 0;
  
@@ -39,9 +40,13 @@ public class ClientGui {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         do {
+        	System.out.print("역할을 입력하세요(1:중앙관리본부/2:지역소방본부/3:소방대원) : ");
+        	user_type = scanner.nextLine();
+        } while(!(user_type.equals("1") || user_type.equals("2") || user_type.equals("3")));
+        do {
         	System.out.print("4자리 이하의 닉네임을 입력하세요 : ");
         	nickName = scanner.nextLine();
-        } while(nickName.length() > 4 || nickName.contains(":")
+        } while(nickName.length() > 4 || nickName.contains(":") || nickName.contains(";")
         		|| nickName.equals("") || nickName.equals("서버") 
         		|| nickName.equals("인원수"));
         

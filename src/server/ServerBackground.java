@@ -34,7 +34,7 @@ public class ServerBackground {
             Receiver receiver = new Receiver(socket);
             receiver.start();
             count_clients+=1;
-            sendMessage("인원수:" + count_clients);
+            sendMessage("0;인원수:" + count_clients);
         }
     }
  
@@ -91,7 +91,7 @@ public class ServerBackground {
                 // 사용접속종료시 에러
                 removeClient(nick);
                 count_clients -= 1;
-                sendMessage("인원수:" + count_clients);
+                sendMessage("0;인원수:" + count_clients);
             }
         }
     }

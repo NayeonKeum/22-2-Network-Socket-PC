@@ -15,7 +15,7 @@ class adjust extends JPanel {
     static int curr=window.curr; // 현재 가장 밑에 있는 위치한 패널의 인덱스 
     int cset; // 색 설정에 관한 변수
     ChatPanel p2;
-    final static int limitByteLength = 40;
+    final static int limitByteLength = 37;
     static String sender = "";
     static String msg = "";
     static String time = "";
@@ -72,7 +72,20 @@ class adjust extends JPanel {
         bts.get(idx).subbt.get(1).setOpaque(true);
         
         // 글자 색 지정
-        bts.get(idx).subbt.get(0).setForeground(Color.decode("#9aaab8"));	// sender - 회색 #9aaab8
+        /* sender 글자 색
+         * 중앙관리본부 : 초록색 #47a877
+         * 지역소방본부 : 주황색 #d98209
+         * 소방대원 : 빨간색 #ba3d3d
+         * 그외 : 회색 #9aaab8 */
+        if (typeOfSender(msg).equals("1"))
+        	bts.get(idx).subbt.get(0).setForeground(Color.decode("#47a877"));	// sender
+        else if (typeOfSender(msg).equals("2"))
+        	bts.get(idx).subbt.get(0).setForeground(Color.decode("#d98209"));	// sender
+        else if (typeOfSender(msg).equals("3"))
+        	bts.get(idx).subbt.get(0).setForeground(Color.decode("#ba3d3d"));	// sender
+        else
+        	bts.get(idx).subbt.get(0).setForeground(Color.decode("#9aaab8"));	// sender
+        //bts.get(idx).subbt.get(0).setForeground(Color.decode("#9aaab8"));	// sender - 회색 #9aaab8
         //bts.get(idx).subbt.get(0).setFont(new Font("Serif", Font.PLAIN, 10));
         bts.get(idx).subbt.get(1).setForeground(Color.black);	// 메시지 내용 - 검은색
         //bts.get(idx).subbt.get(1).setFont(new Font("돋움", Font.PLAIN, 13));
@@ -86,11 +99,14 @@ class adjust extends JPanel {
         	bts.get(idx).subbt.get(1).setForeground(Color.white);	// 메시지 내용 - 흰색
         	bts.get(idx).subbt.get(3).setText("");
         } else if (sender.equals("♥")) {
-        	bts.get(idx).subbt.get(0).setForeground(Color.decode("#fa7fa2"));	//  핑크 #fa7fa2
-        	bts.get(idx).subbt.get(1).setBackground(Color.decode("#fa7fa2"));	//  핑크 #fa7fa2
+        	bts.get(idx).subbt.get(0).setForeground(Color.decode("#ba3d3d"));	// 빨강 #ba3d3d  핑크 #fa7fa2
+        	bts.get(idx).subbt.get(1).setBackground(Color.decode("#ba3d3d"));	// 빨강 #ba3d3d  핑크 #fa7fa2
         	bts.get(idx).subbt.get(1).setForeground(Color.white);	// 메시지 내용 - 흰색
+        } else if (sender.equals("위치")) {
+        	bts.get(idx).subbt.get(1).setBackground(Color.decode("#ccdeeb"));  // 채팅방 색깔과 동일
+        	bts.get(idx).subbt.get(1).setForeground(Color.blue);	// 메시지 내용 - 파랑
+        	bts.get(idx).subbt.get(3).setText("");
         }
-       
         
     }
     
@@ -241,10 +257,14 @@ class adjust extends JPanel {
     	return null;
     }
     
+    private String typeOfSender(String msg6) {
+        return msg6.substring(0, 1);
+    }
+    
     private String whoIsSender(String msg3) {
         int indexColon = msg3.indexOf(":");  // msg에서 가장 먼저 나오는 : => 닉네임 규칙 - :를 포함하면 안됨!
 
-        return msg3.substring(0, indexColon);
+        return msg3.substring(2, indexColon);
     }
 
     private String getMsgContent(String msg4) {

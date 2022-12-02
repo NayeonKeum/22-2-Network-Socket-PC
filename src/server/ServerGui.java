@@ -30,11 +30,27 @@ public class ServerGui extends JFrame implements ActionListener {
     private JButton jbtn = new JButton("port 닫기");
     private ServerBackground server;
     static int server_port = 0;
+
+    private JButton jbtn_sensor = new JButton("센서 경보 발령");
     
  
     public ServerGui() throws IOException {
         
         add_port(server_port);
+        
+        jbtn_sensor.addActionListener(new ActionListener() {
+    		@Override
+    	    public void actionPerformed(ActionEvent e) {
+    			String location = jtf.getText();
+    			if (!location.equals("")) {
+        			server.sendMessage("5;서버:센서가 산불을 감지하였습니다.");
+    				server.sendMessage("6;위치:https://www.google.co.kr/maps/place/"+location);
+    	        	jtf.setText("");
+    			}
+    	    }
+    	});
+ 
+    	add(jbtn_sensor, BorderLayout.WEST);
     	
     	jbtn.addActionListener(new ActionListener() {
     		@Override
@@ -87,7 +103,7 @@ public class ServerGui extends JFrame implements ActionListener {
  
     @Override
     public void actionPerformed(ActionEvent e) {
-        String msg = "서버:" + jtf.getText();
+        String msg = "0;서버:" + jtf.getText();
         System.out.print(msg);
         server.sendMessage(msg);
         jtf.setText("");

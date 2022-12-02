@@ -24,7 +24,7 @@ public class ClientBackground {
  
     public void connet() {
         try {
-            socket = new Socket("192.168.0.23", client_port);
+            socket = new Socket("172.20.18.117", client_port);
             System.out.println("¼­¹ö ¿¬°áµÊ.");
  
             out = new DataOutputStream(socket.getOutputStream());

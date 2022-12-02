@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import java.net.*;
+
 //서브 버튼 패널 클래스
 class BubbleSet extends JPanel{
  ArrayList<JLabel> subbt=new ArrayList<>(); // 서브 버튼들 배열
@@ -54,7 +56,7 @@ class BubbleSet extends JPanel{
                  	 String likeID = makeBubbleID(like);
                  	 
                  	 subbt.get(3).setText("♥");
-                 	 ClientBackground.sendMessage("♥:"+ ClientGui.nickName + "님이 마음에 들어합니다.:" + likeID);
+                 	 ClientBackground.sendMessage("4;♥:"+ ClientGui.nickName + "님이 출동합니다.:" + likeID);
                 }
              }
          });
@@ -76,6 +78,9 @@ class BubbleSet extends JPanel{
      else
     	 add(inBubble, BorderLayout.WEST);
      
+     
+     addHyperlink(inBubble);
+     
  	}
  
 
@@ -96,5 +101,38 @@ class BubbleSet extends JPanel{
 		return SERIF_FONT.deriveFont(fontSize);
 		//나눔바른고딕 - http://cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.ttf
 	}
+	
+	static void addHyperlink(JPanel bb) {
+		Component[] labels = (Component[]) bb.getComponents();
+ 		String content = ((JLabel) labels[1]).getText().toString();
+ 		if (content.contains("http"))
+ 			((JLabel) labels[1]).addMouseListener(new MouseAdapter() {
+ 	             @Override
+ 	             public void mouseClicked(MouseEvent e) {
+ 	            	if (Desktop.isDesktopSupported()) {
+ 	                   Desktop desktop = Desktop.getDesktop();
+ 	                   try {
+ 	                       URI uri = new URI(strUnConvert(content));
+ 	                       desktop.browse(uri);
+ 	                   } catch (IOException ex) {
+ 	                       ex.printStackTrace();
+ 	                   } catch (URISyntaxException ex) {
+ 	                       ex.printStackTrace();
+ 	                   }
+ 	            	}
+ 	             }
+ 	         });
+	}
+	
+	private static String strUnConvert(String str) {
+    	// <html> </html> <br>을 모두 remove한다.
+    	StringBuffer buffer = new StringBuffer(str);
+    	str = str.replaceAll("<html>", "");
+    	str = str.replaceAll("</html>", "");
+    	str = str.replaceAll("<br>", "");
+    	str = str.replaceAll("<br/>", "");
+    	return str;
+    	
+    }
 	
 }
