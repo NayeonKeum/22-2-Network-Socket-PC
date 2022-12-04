@@ -22,12 +22,13 @@ class adjust extends JPanel {
     static String aSenderlikes="", likedsender = "", likedcontent = "";
 
     public adjust(String msg, String time) {
+    	
         p2=window.p2;
         bts=window.bts;
         find=BubbleSet.find;
         this.msg=msg;
         this.time=time;
-        
+	    
         if (!getMsgContent(msg).equals("")) {
         	if (isNotification(msg)) {  // 안내메시지
         		sender = "서버";
@@ -38,7 +39,6 @@ class adjust extends JPanel {
 		        // 내 메시지
 		        if (sender.equals(ClientGui.nickName)) {
 		        	addBubblePanel(true);	// 버블 추가
-		        	
 		        } else if (sender.equals("인원수")) {
 		        	// 버블 추가하지 않음.
 		        	// 상단패널의 인원수를 업데이트 - ppCount, lb_ppCount
@@ -161,11 +161,11 @@ class adjust extends JPanel {
         
         // 새 버블에 색 지정 
         selectColor(curr, isMe);
-        
-        
+       
         // GUI 창 업데이트
         p2.revalidate();
         p2.repaint();
+        
     }
     
     

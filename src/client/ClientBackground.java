@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
  
-public class ClientBackground {
+public class ClientBackground implements Runnable {
  
     private Socket socket;
     private DataInputStream in;
@@ -24,18 +24,21 @@ public class ClientBackground {
  
     public void connet() {
         try {
-            socket = new Socket("172.20.18.117", client_port);
+            socket = new Socket("10.101.35.20", client_port);
+
             System.out.println("서버 연결됨.");
- 
+
             out = new DataOutputStream(socket.getOutputStream());
             in = new DataInputStream(socket.getInputStream());
  
             out.writeUTF(nickName);
             System.out.println("클라이언트 : 메시지 전송완료");
-            while (in != null) {
-                msg = in.readUTF();
-                new adjust(msg, nowTime(3));
-            }
+
+            /* 이 while문에서 오류가 남. - thread 처리 */
+//            while (in != null) {
+//                msg = in.readUTF();
+//                new adjust(msg, nowTime(3));
+//            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -43,6 +46,7 @@ public class ClientBackground {
  
     public static void main(String[] args) {
         ClientBackground clientBackground = new ClientBackground();
+
         clientBackground.connet();
     }
  
@@ -82,5 +86,19 @@ public class ClientBackground {
     	
     	return time;
     }
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		while (in != null) {
+            try {
+				msg = in.readUTF();
+	            new adjust(msg, nowTime(3));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+	}
  
 }
