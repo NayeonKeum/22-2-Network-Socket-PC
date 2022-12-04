@@ -103,7 +103,7 @@ class adjust extends JPanel {
         	bts.get(idx).subbt.get(1).setBackground(Color.decode("#ba3d3d"));	// 빨강 #ba3d3d  핑크 #fa7fa2
         	bts.get(idx).subbt.get(1).setForeground(Color.white);	// 메시지 내용 - 흰색
         } else if (sender.equals("위치")) {
-        	bts.get(idx).subbt.get(1).setBackground(Color.decode("#ccdeeb"));  // 채팅방 색깔과 동일
+        	bts.get(idx).subbt.get(1).setBackground(Color.decode(window.color_chatRoom));  // 채팅방 색깔과 동일
         	bts.get(idx).subbt.get(1).setForeground(Color.blue);	// 메시지 내용 - 파랑
         	bts.get(idx).subbt.get(3).setText("");
         }

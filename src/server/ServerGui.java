@@ -17,17 +17,18 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import client.ClientGui;
+import server.Server_Back.ReceiveInfo;
 
 import javax.swing.JButton;
  
 public class ServerGui extends JFrame implements ActionListener {
  
     private static final long serialVersionUID = 1L;
-    private JTextArea jta = new JTextArea(40, 25); // ëŒ€í™” ë‚˜íƒ€ë‚˜ëŠ” ì°½
-    private JTextField jtf = new JTextField(25); // ë³´ë‚¼ í…ìŠ¤íŠ¸ ì…ë ¥í•˜ëŠ” ì¹¸
-    private JButton jbtn_sensor = new JButton("ì„¼ì„œ ê²½ë³´ ë°œë ¹"); // ì„¼ì„œ ê²½ë³´ë°œë ¹ ë²„íŠ¼
-    private Server_Back server;
-    static int server_port = 0;
+    private JTextArea jta = new JTextArea(40, 25); // ´ëÈ­ ³ªÅ¸³ª´Â Ã¢
+    private JTextField jtf = new JTextField(25); // º¸³¾ ÅØ½ºÆ® ÀÔ·ÂÇÏ´Â Ä­
+    private JButton jbtn_sensor = new JButton("¼¾¼­ °æº¸ ¹ß·É"); // ¼¾¼­ °æº¸¹ß·É ¹öÆ°
+    public Server_Back server;
+    int server_port = 0;
     
     
     public ServerGui(int portnum) throws IOException {
@@ -39,38 +40,49 @@ public class ServerGui extends JFrame implements ActionListener {
         
         
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setVisible(true);
-        setBounds(600, 100, 400, 600);
-        setTitle("ì„œë²„ : port : " + server_port);
+        if (server_port == 65001) {
+        	setVisible(false);
+        } else {
+        	setVisible(true);
+        }
         
-        // ì„¼ì„œ ê²½ë³´ë°œë ¹ ë²„íŠ¼ ì•¡ìƒ¨
+        setBounds(600, 100, 400, 600);
+        setTitle("¼­¹ö : port : " + server_port);
+        
+        // ¼¾¼­ °æº¸¹ß·É ¹öÆ° ¾×¼¢
         jbtn_sensor.addActionListener(new ActionListener() {
     		@Override
     	    public void actionPerformed(ActionEvent e) {
     			String location = jtf.getText();
     			if (!location.equals("")) {
-        			server.sendMessage("5;ì„œë²„:ì„¼ì„œê°€ ì‚°ë¶ˆì„ ê°ì§€í•˜ì˜€ìŠµë‹ˆë‹¤.");
-    				server.sendMessage("6;ìœ„ì¹˜:https://www.google.co.kr/maps/place/"+location);
+        			server.sendMessage("5;¼­¹ö:¼¾¼­°¡ »êºÒÀ» °¨ÁöÇÏ¿´½À´Ï´Ù.");
+    				server.sendMessage("6;À§Ä¡:https://www.google.co.kr/maps/place/"+location);
     	        	jtf.setText("");
     			}
     	    }
     	});
  		
-        // ì„œë²„ ì‹¤í–‰
+        // ¼­¹ö ½ÇÇà
         server = new Server_Back();
         server.setGui(this);
         server.setting(server_port);
-        server.start();
+        //server.start();
+        
+//        Thread thread = new Thread(server);
+//        thread.start();
+        
     }
  
     	
  
     @Override
     public void actionPerformed(ActionEvent e) {
-        String msg = "ì„œë²„:" + jtf.getText();
+        String msg = "0;¼­¹ö:" + jtf.getText();
         System.out.print(msg);
         appendMsg(msg);
+        
         server.sendMessage(msg);
+		
         jtf.setText("");
     }
  

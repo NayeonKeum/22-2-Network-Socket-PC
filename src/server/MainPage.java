@@ -1,7 +1,13 @@
 package server;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import client.RoundJTextField;
+import client.RoundedButton;
+import client.myColorRenderer;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -12,12 +18,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.awt.EventQueue;
 
 public class MainPage extends JFrame {
 	
 	private ServerGui gui = null;
     static int server_port = 0;
+
+	DefaultTableModel model;
+	
+	static ServerGui main_server_gui;
 	
 	public MainPage() {
 		
@@ -30,27 +39,48 @@ public class MainPage extends JFrame {
 		DefaultTableModel model = new DefaultTableModel(colNames, 0);
 		
 		JTable table = new JTable(model);
+		
+		table.getColumnModel().getColumn(0).setHeaderRenderer(new myColorRenderer());
+		table.getColumnModel().getColumn(1).setHeaderRenderer(new myColorRenderer());
+		table.setRowHeight(23);
+		table.setShowHorizontalLines(false);
+		table.setShowVerticalLines(false);
+		
+		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // µğÆúÆ®Å×ÀÌºí¼¿·»´õ·¯¸¦ »ı¼º
+	    dtcr.setHorizontalAlignment(SwingConstants.CENTER); // ·»´õ·¯ÀÇ °¡·ÎÁ¤·ÄÀ» CENTER·Î
+	    dtcr.setForeground(new Color(130, 108, 94));
+	    table.getColumnModel().getColumn(0).setCellRenderer(dtcr);
+	    table.getColumnModel().getColumn(1).setCellRenderer(dtcr);
+		
 		JScrollPane scrollPane = new JScrollPane(table);
 		add(scrollPane, BorderLayout.CENTER);
 		
-		// í•˜ë‹¨ ë°ì´í„° ì…ë ¥ íŒ¨ë„
+		table.setBackground(Color.decode("#fff7f2"));
+		scrollPane.getViewport().setBackground(Color.decode("#fff7f2"));	// ¹è°æ»ö ÁöÁ¤
+		
+		// ÇÏ´Ü µ¥ÀÌÅÍ ÀÔ·Â ÆĞ³Î
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new GridLayout(2,1));
-		// í¬íŠ¸ ì¶”ê°€í•˜ê¸°
+		bottomPanel.setBackground(Color.decode("#fcddca"));
+		// Æ÷Æ® Ãß°¡ÇÏ±â
 		JPanel panel = new JPanel();
-		JTextField tfArea = new JTextField(7);
-		JTextField tfPortnumber = new JTextField(5);
-		JButton btnAdd = new JButton("ì¶”ê°€í•˜ê¸°");
-		panel.add(new JLabel("ì§€ì—­ : "));
+		panel.setBackground(Color.decode("#fcddca"));
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
+		RoundJTextField tfArea = new RoundJTextField(7);
+		RoundJTextField tfPortnumber = new RoundJTextField(5);
+		RoundedButton btnAdd = new RoundedButton("Ãß°¡ÇÏ±â");
+		panel.add(new JLabel("Áö¿ª :"));
 		panel.add(tfArea);
-		panel.add(new JLabel("í¬íŠ¸ë²ˆí˜¸ : "));
+		panel.add(new JLabel("Æ÷Æ®¹øÈ£ :"));
 		panel.add(tfPortnumber);
 		panel.add(btnAdd);
 		bottomPanel.add(panel);
-		// í¬íŠ¸ ì‚­ì œí•˜ê¸°, ì—´ê¸° ë²„íŠ¼
+		// Æ÷Æ® »èÁ¦ÇÏ±â, ¿­±â ¹öÆ°
 		JPanel panel2 = new JPanel();
-		JButton btnDel = new JButton("ì‚­ì œí•˜ê¸°");
-		JButton btnIn = new JButton("ì—´ê¸°");
+		panel2.setBackground(Color.decode("#fcddca"));
+		panel2.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
+		RoundedButton btnDel = new RoundedButton("»èÁ¦ÇÏ±â");
+		RoundedButton btnIn = new RoundedButton("¿­±â");
 		panel2.add(btnDel);
 		panel2.add(btnIn);
 		bottomPanel.add(panel2);
@@ -58,14 +88,14 @@ public class MainPage extends JFrame {
 		add(bottomPanel, BorderLayout.SOUTH);
 		setVisible(true);
 		
-		// MainPage ì¢…ë£Œì‹œ í¬íŠ¸ ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™”/í”„ë¡œê·¸ë¨ ì¢…ë£Œ
+		// MainPage Á¾·á½Ã Æ÷Æ® ¸®½ºÆ® ÃÊ±âÈ­/ÇÁ·Î±×·¥ Á¾·á
 		addWindowListener(new WindowAdapter() {
         	public void windowClosing(WindowEvent e) {
         		try {
         			PrintWriter pw = new PrintWriter("portlist.txt");
         			pw.close();
-        			System.out.println("í¬íŠ¸ë¥¼ ëª¨ë‘ ì‚­ì œí•©ë‹ˆë‹¤.");
-        			System.out.println("í”„ë¡œê·¸ë¨ì„ ì¢…ë£Œí•©ë‹ˆë‹¤.");
+        			System.out.println("Æ÷Æ®¸¦ ¸ğµÎ »èÁ¦ÇÕ´Ï´Ù.");
+        			System.out.println("ÇÁ·Î±×·¥À» Á¾·áÇÕ´Ï´Ù.");
         		} catch(IOException e1) {
         			e1.printStackTrace();
         		}
@@ -73,10 +103,10 @@ public class MainPage extends JFrame {
         	}
         });
 		
-		// ì¶”ê°€í•˜ê¸° ë²„íŠ¼ ì•¡ì…˜
+		// Ãß°¡ÇÏ±â ¹öÆ° ¾×¼Ç
 		btnAdd.addActionListener(new ActionListener() {
 			@Override
-			// ì…ë ¥ëœ ê°’ í…Œì´ë¸”ì— ì¶”ê°€í•˜ê¸° - ì…ë ¥ ê°’ë“¤ í•œ ë°°ì—´ë¡œ ë§Œë“¤ê¸°
+			// ÀÔ·ÂµÈ °ª Å×ÀÌºí¿¡ Ãß°¡ÇÏ±â - ÀÔ·Â °ªµé ÇÑ ¹è¿­·Î ¸¸µé±â
 			public void actionPerformed(ActionEvent e) {
 				String[] rows = new String[2];
 				rows[0] = tfArea.getText();
@@ -85,18 +115,18 @@ public class MainPage extends JFrame {
 				if (server_port < 5000 || server_port > 65000 || isAlreadyExist(server_port)) {
 					tfArea.setText("");
 					tfPortnumber.setText("");
-					JOptionPane.showMessageDialog(null, "ì˜¬ë°”ë¥´ì§€ ì•Šì€ í¬íŠ¸ë²ˆí˜¸ì…ë‹ˆë‹¤.");
+					JOptionPane.showMessageDialog(null, "¿Ã¹Ù¸£Áö ¾ÊÀº Æ÷Æ®¹øÈ£ÀÔ´Ï´Ù.");
 				}
 				else {
 				model.addRow(rows);
 				add_port(server_port);
 				}
-				// ì…ë ¥ í›„ í…ìŠ¤íŠ¸ í•„ë“œ ê°’ ì œê±°
+				// ÀÔ·Â ÈÄ ÅØ½ºÆ® ÇÊµå °ª Á¦°Å
 				tfArea.setText("");
 				tfPortnumber.setText("");												
 			}
 		});
-		// ì‚­ì œí•˜ê¸° ë²„íŠ¼ ì•¡ì…˜
+		// »èÁ¦ÇÏ±â ¹öÆ° ¾×¼Ç
 		btnDel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -107,7 +137,7 @@ public class MainPage extends JFrame {
 				del_port(server_port);
 			}
 		});
-		// ì—´ê¸° ë²„íŠ¼ ì•¡ì…˜
+		// ¿­±â ¹öÆ° ¾×¼Ç
 		btnIn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -125,9 +155,16 @@ public class MainPage extends JFrame {
 	}
 	
 	public static void main(String args[]) {
+		try {
+			main_server_gui = new ServerGui(65001);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		new MainPage();
 	}
-	// portlist.txtì— ì´ë¯¸ ìˆëŠ”ì§€ ê²€ì‚¬
+	// portlist.txt¿¡ ÀÌ¹Ì ÀÖ´ÂÁö °Ë»ç
     private static boolean isAlreadyExist(int port_num) {
     	File file = new File("portlist.txt");
     	String fileText = ""; //= ReadFileText(file);
@@ -159,7 +196,7 @@ public class MainPage extends JFrame {
     	
     }    
     
-    // í¬íŠ¸ í…Œì´ë¸”ì— ì¶”ê°€í•˜ê¸°
+    // Æ÷Æ® Å×ÀÌºí¿¡ Ãß°¡ÇÏ±â
     private void add_port(int port_num) {
     	try{
     		String data = server_port + ",";
@@ -172,19 +209,26 @@ public class MainPage extends JFrame {
     		}
  
     		//true = append file
-    		FileWriter fileWritter = new FileWriter(file.getName(),true); // ë’¤ì— ë§ë¶™ì´ê¸°
+    		FileWriter fileWritter = new FileWriter(file.getName(),true); // µÚ¿¡ µ¡ºÙÀÌ±â
     	        BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
     	        bufferWritter.write(data);
     	        bufferWritter.close();
  
 	        System.out.println("ADD PORT TO FILE Done");
+	        
+	        try {
+		        if (main_server_gui.server.out_main != null)
+		        	main_server_gui.server.sendPortlist();
+	        } catch (Exception e) {
+	        	e.printStackTrace();
+	        }
  
     	}catch(IOException e){
     		e.printStackTrace();
     	}
     }
     
-    // í¬íŠ¸ í…Œì´ë¸”ì—ì„œ ì‚­ì œí•˜ê¸°
+    // Æ÷Æ® Å×ÀÌºí¿¡¼­ »èÁ¦ÇÏ±â
     private void del_port(int port_num) {
     	File file = new File("portlist.txt");
     	String fileText = ""; //= ReadFileText(file);
@@ -207,25 +251,32 @@ public class MainPage extends JFrame {
     	if(file.exists()){
         	for (int i=0; i < ports.length; i++) {
     	    	if (ports[i].equals(port_num+"")) {
-    	    		System.out.println("port ë²ˆí˜¸ " + ports[i] + "ì‚­ì œ");
+    	    		System.out.println("port ¹øÈ£ " + ports[i] + "»èÁ¦");
     	    		ports[i] = "";
     	    	}
         	}
 			
 	    	try { 
 		    	BufferedWriter buffWrite = new BufferedWriter(new FileWriter(file));
-		        // íŒŒì¼ ì“°ê¸°
+		        // ÆÄÀÏ ¾²±â
 		    	for (String s : ports) {
 		    		if (!s.equals(""))
 		    			buffWrite.write(s+",", 0, (s+",").length());
 		    	}
-		        // íŒŒì¼ ë‹«ê¸°
+		        // ÆÄÀÏ ´İ±â
 		        buffWrite.flush();  
 		        buffWrite.close();
 	        } catch (IOException ex) {
 	        	System.out.println(ex.getMessage());
 	        }
     	}
+    	
+    	try {
+	        if (main_server_gui.server.out_main != null)
+	        	main_server_gui.server.sendPortlist();
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
     } 
  
 }

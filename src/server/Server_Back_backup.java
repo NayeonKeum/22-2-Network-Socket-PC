@@ -4,7 +4,7 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-public class Server_Back {
+public class Server_Back_backup {
 	
 	private Map<String, DataOutputStream> clientsMap = new HashMap<String, DataOutputStream>();
 	Vector<ReceiveInfo> ClientList = new Vector<ReceiveInfo>();
@@ -12,12 +12,9 @@ public class Server_Back {
 	Socket socket;
 	private ServerGui servergui;
 	private String msg;
-	int count_clients = 0;
+	static int count_clients = 0;
 	
 	static DataOutputStream out_main;
-	
-
-	public static boolean isServerMessage = false;
 	
 	public void setGui(ServerGui servergui) {
 		this.servergui = servergui;
@@ -75,11 +72,10 @@ public class Server_Back {
 	}
 	
 	// 쓰레드
-	public class ReceiveInfo extends Thread {
+	class ReceiveInfo extends Thread {
 		private DataInputStream in;
 		private DataOutputStream out;
 		String nick;
-		
 		
 		public ReceiveInfo(Socket socket) throws IOException {
 			out = new DataOutputStream(socket.getOutputStream());
@@ -98,29 +94,19 @@ public class Server_Back {
 			}
 		}
 		
-		public ReceiveInfo(String message) {
-			isServerMessage = true;
-			msg = message;
-		}
-		
 		public void run() {
-			if (!isServerMessage) {
-				try {				
-					while (in != null) {
-		                msg = in.readUTF();
-		                sendMessage(msg);
-		                servergui.appendMsg(msg);
-					}
-				} catch (Exception e){
-					if (!nick.equals("ClientMain")) {
-						removeClient(nick);
-		                count_clients -= 1;
-		                sendMessage("0;인원수:" + count_clients);
-					}
+			try {				
+				while (in != null) {
+	                msg = in.readUTF();
+	                sendMessage(msg);
+	                servergui.appendMsg(msg);
 				}
-			} else {
-				sendMessage(msg);
-				isServerMessage = false;
+			} catch (Exception e){
+				if (!nick.equals("ClientMain")) {
+					removeClient(nick);
+	                count_clients -= 1;
+	                sendMessage("0;인원수:" + count_clients);
+				}
 			}
 		}
 		
