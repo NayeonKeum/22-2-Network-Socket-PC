@@ -26,7 +26,7 @@ public class ClientBackground implements Runnable {
  
     public void connet() {
         try {
-            socket = new Socket("192.168.44.82", client_port);
+            socket = new Socket("192.168.23.214", client_port);
 
             System.out.println("¼­¹ö ¿¬°áµÊ.");
 

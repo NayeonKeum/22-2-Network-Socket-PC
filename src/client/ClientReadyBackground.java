@@ -20,7 +20,7 @@ public class ClientReadyBackground implements Runnable {
 
     public void connet() {
         try {
-            socket = new Socket("192.168.44.82", client_port);
+            socket = new Socket("192.168.23.214", client_port);
 
             System.out.println("서버 연결됨. 클라이언트 ready");
 
